@@ -22,7 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:src="@drawable/img_toolbar_logo"
                 android:text="SHARE TO"
                 android:textColor="#333333"
                 android:textSize="18sp" />

@@ -190,13 +190,15 @@
                     app:layout_scrollFlags="scroll|enterAlways"
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/ivLogo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:scaleType="center"
-                        android:src="@drawable/img_toolbar_logo" />
+                        android:text="Daily Recipes"
+                        android:textSize="30dp"
+                        android:textColor="@android:color/white"
+                        android:gravity="center" />
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.CollapsingToolbarLayout>

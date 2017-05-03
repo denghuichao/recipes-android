@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 
 import butterknife.BindView;
+
 import com.deng.recipes.InstaMaterialApplication;
 import com.deng.recipes.R;
 import com.deng.recipes.Utils;
@@ -19,6 +20,7 @@ import com.deng.recipes.entity.RecipeEntity;
 import com.deng.recipes.ui.adapter.CookStepAdapter;
 import com.deng.recipes.ui.adapter.IngredientItemAdapter;
 import com.deng.recipes.ui.view.MyListView;
+import com.google.common.base.Strings;
 
 /**
  * Created by froger_mcs on 11.11.14.
@@ -82,39 +84,42 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        Bundle bundle=getIntent().getExtras();
-        recipeEntity  = (RecipeEntity) bundle.getSerializable("recipe");
-        setuoRecipeInfo();
+        Bundle bundle = getIntent().getExtras();
+        recipeEntity = (RecipeEntity) bundle.getSerializable("recipe");
+        setupRecipeInfo();
         setupSteps();
         setupIngredients();
-        svRoot.smoothScrollTo(0,0);
+        svRoot.smoothScrollTo(0, 0);
         svRoot.setFocusable(true);
     }
 
-    private void setuoRecipeInfo(){
-        if(recipeEntity.getRecipe().getImages().size() > 0) {
+    private void setupRecipeInfo() {
+        if (recipeEntity.getRecipe().getImages().size() > 0) {
             ((InstaMaterialApplication) this.getApplicationContext()).getImageLoader()
-                    .displayImage(recipeEntity.getRecipe().getImages().get(0), ivImage); //
+                    .displayImage(recipeEntity.getRecipe().getImages().get(0), ivImage,
+                            InstaMaterialApplication.imageOptions()); //
+        } else {
+            ivImage.setVisibility(View.GONE);
         }
 
         tvTitle.setText(recipeEntity.getRecipe().getTitle());
 
-        if(recipeEntity.getRecipe().getTags().size() > 0) {
+        if (recipeEntity.getRecipe().getTags().size() > 0) {
             tvTag.setText(recipeEntity.getRecipe().getTags().iterator().next());
         }
 
         tvCookMethod.setText(recipeEntity.getRecipe().getCookMethod());
         tvTimeCost.setText(recipeEntity.getRecipe().getCookingTime());
 
-        tvCooked.setText(recipeEntity.getRecipe().getCookedNum()+"人做过");
-        tvCollected.setText(recipeEntity.getRecipe().getCookedNum()+"人收藏");
-        tvLiked.setText(recipeEntity.getRecipe().getLikedNum()+"人喜欢");
+        tvCooked.setText(recipeEntity.getRecipe().getCookedNum() + "人做过");
+        tvCollected.setText(recipeEntity.getRecipe().getCookedNum() + "人收藏");
+        tvLiked.setText(recipeEntity.getRecipe().getLikedNum() + "人喜欢");
 
         tvDesc.setText(recipeEntity.getRecipe().getDesc());
 
         String tips = recipeEntity.getRecipe().getTips();
-        if(!(tips == null || "".equals(tips))){
-           tvTips.setText(tips);
+        if (!Strings.isNullOrEmpty(tips)) {
+            tvTips.setText(tips);
             tipsRoot.setVisibility(View.VISIBLE);
         }
     }
@@ -130,7 +135,7 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
 
     }
 
-    private void setupIngredients(){
+    private void setupIngredients() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvIngredients.setLayoutManager(linearLayoutManager);
         rvIngredients.setHasFixedSize(true);

@@ -1,16 +1,20 @@
 package com.deng.recipes.ui.activity;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.deng.recipes.R;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import butterknife.OnItemClick;
 
 /**
  * Created by Miroslaw Stanek on 19.01.15.
@@ -23,9 +27,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @Nullable
     @BindView(R.id.ivLogo)
-    ImageView ivLogo;
+    TextView ivLogo;
 
-    private MenuItem inboxMenuItem;
+    private MenuItem searchMenuItem;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -36,6 +40,11 @@ public class BaseActivity extends AppCompatActivity {
     protected void bindViews() {
         ButterKnife.bind(this);
         setupToolbar();
+
+        if(ivLogo!=null) {
+            Typeface customFont = Typeface.createFromAsset(this.getAssets(), "fonts/GreatVibes-Regular.ttf");
+            ivLogo.setTypeface(customFont);
+        }
     }
 
     public void setContentViewWithoutInject(int layoutResId) {
@@ -52,9 +61,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        inboxMenuItem = menu.findItem(R.id.action_inbox);
-        inboxMenuItem.setActionView(R.layout.menu_item_view);
-
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchMenuItem.setActionView(R.layout.menu_item_view);
         return true;
     }
 
@@ -62,11 +70,11 @@ public class BaseActivity extends AppCompatActivity {
         return toolbar;
     }
 
-    public MenuItem getInboxMenuItem() {
-        return inboxMenuItem;
+    public MenuItem getSearchMenuItem() {
+        return searchMenuItem;
     }
 
-    public ImageView getIvLogo() {
+    public TextView getIvLogo() {
         return ivLogo;
     }
 }

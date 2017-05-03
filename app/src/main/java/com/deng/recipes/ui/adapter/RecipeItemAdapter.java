@@ -79,7 +79,6 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onClick(View v) {
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
-                //feedItems.get(adapterPosition).get++;
                 notifyItemChanged(adapterPosition, ACTION_LIKE_IMAGE_CLICKED);
                 if (context instanceof MainActivity) {
                     ((MainActivity) context).showLikedSnackbar();
@@ -90,12 +89,6 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                int adapterPosition = cellFeedViewHolder.getAdapterPosition();
-//                //feedItems.get(adapterPosition).likesCount++;
-//                notifyItemChanged(adapterPosition, ACTION_LIKE_BUTTON_CLICKED);
-//                if (context instanceof MainActivity) {
-//                    ((MainActivity) context).showLikedSnackbar();
-//                }
                 Intent it = new Intent(context, RecipeDetailActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putSerializable("recipe", cellFeedViewHolder.getFeedItem());
@@ -195,7 +188,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.feedItem = feedItem;
             if (feedItem.getRecipe().getImages().size() > 0) {
                 ((InstaMaterialApplication) context.getApplicationContext()).getImageLoader()
-                        .displayImage(feedItem.getRecipe().getImages().get(0), ivFeedCenter); //
+                        .displayImage(feedItem.getRecipe().getImages().get(0), ivFeedCenter,
+                                InstaMaterialApplication.imageOptions()); //
             }
             //此处需要判断当前用户是否点赞了
             btnLike.setImageResource(true ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
@@ -230,7 +224,5 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface OnFeedItemClickListener {
 
         void onMoreClick(View v, int position);
-
-        void onProfileClick(View v);
     }
 }

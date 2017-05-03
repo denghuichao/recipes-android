@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
@@ -20,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 import com.deng.recipes.R;
 import com.deng.recipes.Utils;
@@ -60,7 +62,7 @@ public class MainActivity extends BaseDrawerActivity implements RecipeItemAdapte
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-           // feedAdapter.updateItems(false);
+            // feedAdapter.updateItems(false);
         }
     }
 
@@ -128,7 +130,8 @@ public class MainActivity extends BaseDrawerActivity implements RecipeItemAdapte
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
                 .setStartDelay(400);
-        getInboxMenuItem().getActionView().animate()
+        // .start();
+        getSearchMenuItem().getActionView().animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
                 .setStartDelay(500)
@@ -148,7 +151,6 @@ public class MainActivity extends BaseDrawerActivity implements RecipeItemAdapte
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        //feedAdapter.updateItems(true);
     }
 
     @Override
@@ -156,14 +158,6 @@ public class MainActivity extends BaseDrawerActivity implements RecipeItemAdapte
         FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, itemPosition, this);
     }
 
-    @Override
-    public void onProfileClick(View v) {
-        int[] startingLocation = new int[2];
-        v.getLocationOnScreen(startingLocation);
-        startingLocation[0] += v.getWidth() / 2;
-        UserProfileActivity.startUserProfileFromLocation(startingLocation, this);
-        overridePendingTransition(0, 0);
-    }
 
     @Override
     public void onReportClick(int feedItem) {
@@ -192,6 +186,19 @@ public class MainActivity extends BaseDrawerActivity implements RecipeItemAdapte
         startingLocation[0] += fabCreate.getWidth() / 2;
         TakePhotoActivity.startCameraFromLocation(startingLocation, this);
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                this.startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void showLikedSnackbar() {

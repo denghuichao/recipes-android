@@ -63,7 +63,7 @@ public class BaseDrawerActivity extends BaseActivity {
         headerView.findViewById(R.id.vGlobalMenuHeader).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onGlobalMenuHeaderClick(v);
+                //onGlobalMenuHeaderClick(v);
             }
         });
 
@@ -76,18 +76,19 @@ public class BaseDrawerActivity extends BaseActivity {
                 .into(ivMenuUserProfilePhoto);
     }
 
-    public void onGlobalMenuHeaderClick(final View v) {
-        drawerLayout.closeDrawer(Gravity.LEFT);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int[] startingLocation = new int[2];
-                v.getLocationOnScreen(startingLocation);
-                startingLocation[0] += v.getWidth() / 2;
-                UserProfileActivity.startUserProfileFromLocation(startingLocation, BaseDrawerActivity.this);
-                overridePendingTransition(0, 0);
-            }
-        }, 200);
-    }
+//
+//    public void onGlobalMenuHeaderClick(final View v) {
+//        drawerLayout.closeDrawer(Gravity.LEFT);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                int[] startingLocation = new int[2];
+//                v.getLocationOnScreen(startingLocation);
+//                startingLocation[0] += v.getWidth() / 2;
+//                SearchActivity.startUserProfileFromLocation(startingLocation, BaseDrawerActivity.this);
+//                overridePendingTransition(0, 0);
+//            }
+//        }, 200);
+//    }
 
 }

@@ -24,7 +24,7 @@ import com.deng.recipes.ui.view.RevealBackgroundView;
 /**
  * Created by Miroslaw Stanek on 14.01.15.
  */
-public class UserProfileActivity extends BaseDrawerActivity implements RevealBackgroundView.OnStateChangeListener {
+public class SearchActivity extends BaseDrawerActivity implements RevealBackgroundView.OnStateChangeListener {
     public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
 
     private static final int USER_OPTIONS_ANIMATION_DELAY = 300;
@@ -52,12 +52,6 @@ public class UserProfileActivity extends BaseDrawerActivity implements RevealBac
     private int avatarSize;
     private String profilePhoto;
     private UserProfileAdapter userPhotosAdapter;
-
-    public static void startUserProfileFromLocation(int[] startingLocation, Activity startingActivity) {
-        Intent intent = new Intent(startingActivity, UserProfileActivity.class);
-        intent.putExtra(ARG_REVEAL_START_LOCATION, startingLocation);
-        startingActivity.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
