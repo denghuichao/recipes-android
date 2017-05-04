@@ -8,7 +8,7 @@
     android:layout_margin="8dp"
     card_view:cardCornerRadius="4dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -39,10 +39,22 @@
                 android:src="@drawable/ic_heart_outline_white"
                 android:visibility="invisible" />
 
+
+
         </com.deng.recipes.ui.view.SquaredFrameLayout>
+
+        <RatingBar
+            android:id="@+id/rating"
+            style="@style/start_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/vImageRoot"
+            android:numStars="5"
+            android:rating="3" />
 
         <TextView
             android:id="@+id/tvTitle"
+            android:layout_below="@id/vImageRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -55,76 +67,13 @@
 
         <TextView
             android:id="@+id/tvDesc"
+            android:layout_below="@id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="3dp"
+            android:layout_margin="5dp"
             android:ellipsize="end"
             android:maxLines="5"
             android:text="@string/recipe_desc"
             android:textSize="@dimen/content_text_size" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
-
-            <ImageButton
-                android:id="@+id/btnLike"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_heart_outline_grey" />
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/btnComments"-->
-                <!--android:layout_width="48dp"-->
-                <!--android:layout_height="48dp"-->
-                <!--android:background="@drawable/btn_feed_action"-->
-                <!--android:src="@drawable/ic_comment_outline_grey" />-->
-
-            <ImageButton
-                android:id="@+id/btnMore"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/btn_feed_action"
-                android:src="@drawable/ic_more_grey" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical|right">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_heart_small_blue" />
-
-                <TextSwitcher
-                    android:id="@+id/tsLikesCounter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:inAnimation="@anim/slide_in_likes_counter"
-                    android:outAnimation="@anim/slide_out_likes_counter">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="123人喜欢"
-                        android:textColor="@color/text_like_counter" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_like_counter" />
-                </TextSwitcher>
-            </LinearLayout>
-        </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

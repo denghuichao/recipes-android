@@ -10,13 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.deng.recipes.R;
 import com.deng.recipes.Utils;
 
 /**
@@ -25,7 +23,6 @@ import com.deng.recipes.Utils;
 public class RecipeItemAnimator extends DefaultItemAnimator {
     private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR = new DecelerateInterpolator();
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
-    private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
 
     Map<RecyclerView.ViewHolder, AnimatorSet> likeAnimationsMap = new HashMap<>();
     Map<RecyclerView.ViewHolder, AnimatorSet> heartAnimationsMap = new HashMap<>();
@@ -94,8 +91,6 @@ public class RecipeItemAnimator extends DefaultItemAnimator {
             FeedItemHolderInfo feedItemHolderInfo = (FeedItemHolderInfo) preInfo;
             RecipeItemAdapter.CellFeedViewHolder holder = (RecipeItemAdapter.CellFeedViewHolder) newHolder;
 
-            animateHeartButton(holder);
-            updateLikesCounter(holder, holder.getFeedItem().getRecipe().getLikedNum());
             if (RecipeItemAdapter.ACTION_LIKE_IMAGE_CLICKED.equals(feedItemHolderInfo.updateAction)) {
                 animatePhotoLike(holder);
             }
@@ -111,51 +106,6 @@ public class RecipeItemAnimator extends DefaultItemAnimator {
         if (heartAnimationsMap.containsKey(item)) {
             heartAnimationsMap.get(item).cancel();
         }
-    }
-
-    private void animateHeartButton(final RecipeItemAdapter.CellFeedViewHolder holder) {
-        AnimatorSet animatorSet = new AnimatorSet();
-
-        ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(holder.btnLike, "rotation", 0f, 360f);
-        rotationAnim.setDuration(300);
-        rotationAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
-
-        ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(holder.btnLike, "scaleX", 0.2f, 1f);
-        bounceAnimX.setDuration(300);
-        bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
-
-        ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(holder.btnLike, "scaleY", 0.2f, 1f);
-        bounceAnimY.setDuration(300);
-        bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
-        bounceAnimY.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                holder.btnLike.setImageResource(R.drawable.ic_heart_red);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                heartAnimationsMap.remove(holder);
-                dispatchChangeFinishedIfAllAnimationsEnded(holder);
-            }
-        });
-
-        animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
-        animatorSet.start();
-
-        heartAnimationsMap.put(holder, animatorSet);
-    }
-
-    private void updateLikesCounter(RecipeItemAdapter.CellFeedViewHolder holder, int toValue) {
-        String likesCountTextFrom = holder.tsLikesCounter.getResources().getQuantityString(
-                R.plurals.likes_count, toValue - 1, toValue - 1
-        );
-        holder.tsLikesCounter.setCurrentText(likesCountTextFrom);
-
-        String likesCountTextTo = holder.tsLikesCounter.getResources().getQuantityString(
-                R.plurals.likes_count, toValue, toValue
-        );
-        holder.tsLikesCounter.setText(likesCountTextTo);
     }
 
     private void animatePhotoLike(final RecipeItemAdapter.CellFeedViewHolder holder) {

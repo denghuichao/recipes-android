@@ -29,4 +29,11 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="start_rating_bar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/star_rating_bar</item>
+        <item name="android:maxHeight">36dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
 </resources>

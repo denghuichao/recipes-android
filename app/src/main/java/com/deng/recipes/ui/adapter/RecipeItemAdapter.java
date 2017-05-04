@@ -20,12 +20,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import com.deng.recipes.InstaMaterialApplication;
 import com.deng.recipes.R;
 import com.deng.recipes.entity.RecipeEntity;
-import com.deng.recipes.ui.activity.MainActivity;
 import com.deng.recipes.ui.activity.RecipeDetailActivity;
 import com.deng.recipes.ui.view.LoadingFeedItemView;
+import com.google.common.base.Strings;
 
 /**
  * Created by froger_mcs on 05.11.14.
@@ -69,28 +70,11 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void setupClickableViews(final View view, final CellFeedViewHolder cellFeedViewHolder) {
-        cellFeedViewHolder.btnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getAdapterPosition());
-            }
-        });
-        cellFeedViewHolder.btnLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPosition = cellFeedViewHolder.getAdapterPosition();
-                notifyItemChanged(adapterPosition, ACTION_LIKE_IMAGE_CLICKED);
-                if (context instanceof MainActivity) {
-                    ((MainActivity) context).showLikedSnackbar();
-                }
-            }
-        });
-
         cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(context, RecipeDetailActivity.class);
-                Bundle bundle=new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putSerializable("recipe", cellFeedViewHolder.getFeedItem());
                 it.putExtras(bundle);       // it.putExtra(“test”, "shuju”);
                 context.startActivity(it);            // startActivityForResult(it,REQUEST_CODE);
@@ -154,16 +138,10 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public static class CellFeedViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ivImage)
         ImageView ivFeedCenter;
-        @BindView(R.id.btnLike)
-        ImageButton btnLike;
-        @BindView(R.id.btnMore)
-        ImageButton btnMore;
         @BindView(R.id.vBgLike)
         View vBgLike;
         @BindView(R.id.ivLike)
         ImageView ivLike;
-        @BindView(R.id.tsLikesCounter)
-        TextSwitcher tsLikesCounter;
         @BindView(R.id.vImageRoot)
         FrameLayout vImageRoot;
 
@@ -191,14 +169,12 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .displayImage(feedItem.getRecipe().getImages().get(0), ivFeedCenter,
                                 InstaMaterialApplication.imageOptions()); //
             }
-            //此处需要判断当前用户是否点赞了
-            btnLike.setImageResource(true ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
-            tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
-                    R.plurals.likes_count, feedItem.getRecipe().getLikedNum(), feedItem.getRecipe().getCookedNum()
-            ));
 
             tvTitle.setText(feedItem.getRecipe().getTitle());
-            tvDesc.setText(feedItem.getRecipe().getDesc());
+            if (Strings.isNullOrEmpty(feedItem.getRecipe().getDesc()))
+                tvDesc.setVisibility(View.GONE);
+            else
+                tvDesc.setText(feedItem.getRecipe().getDesc());
         }
 
         public RecipeEntity getFeedItem() {
