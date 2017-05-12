@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 
 import com.deng.recipes.R;
-import com.deng.recipes.entity.Ingredient;
+import com.deng.recipes.model.entity.recipe.Ingredient;
 
 import java.util.List;
 

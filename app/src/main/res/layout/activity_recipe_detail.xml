@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.activity.RecipeDetailActivity">
 
     <ScrollView
@@ -164,7 +165,7 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true">
 
-                    <com.deng.recipes.ui.view.MyListView
+                    <com.deng.recipes.ui.view.ExpandingListView
                         android:id="@+id/rvIngredients"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -187,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:text="烹饪步骤"/>
-                <com.deng.recipes.ui.view.MyListView
+                <com.deng.recipes.ui.view.ExpandingListView
                     android:id="@+id/rvSteps"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -228,4 +229,160 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/ibMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/btn_fab_margins"
+        android:layout_marginRight="@dimen/btn_fab_margins"
+        android:src="@drawable/ic_menu_white"
+        app:backgroundTint="@android:color/holo_orange_light"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp" />
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvMenuRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/btn_fab_margins"
+        android:visibility="invisible"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rvCookedRoot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/menu_backgroud"
+                android:clickable="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/ivCookedMenu"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="center"
+                    android:src="@drawable/cook_ori_72"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/tvCookedMenu"
+                    android:text="做过"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@id/ivCookedMenu"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rvCollectionRoot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/menu_backgroud"
+                android:clickable="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/ivCollectionMenu"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="center"
+                    android:src="@drawable/star_ori_72"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/tvCollectionMenu"
+                    android:text="收藏"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@id/ivCollectionMenu"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rvLikeRoot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/menu_backgroud"
+                android:clickable="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/ivLikeMenu"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="center"
+                    android:src="@drawable/heart_ori_72"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/tvLikeMenu"
+                    android:text="点赞"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@id/ivLikeMenu"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rvCancelRoot"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/menu_backgroud"
+                android:clickable="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/ivCancelMenu"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="center"
+                    android:src="@drawable/cancel_ori_72"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:text="取消"
+                    android:id="@+id/tvCancelMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toRightOf="@id/ivCancelMenu"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

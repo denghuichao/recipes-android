@@ -1,4 +1,4 @@
-package com.deng.recipes.entity;
+package com.deng.recipes.model.entity.recipe;
 
 import java.io.Serializable;
 

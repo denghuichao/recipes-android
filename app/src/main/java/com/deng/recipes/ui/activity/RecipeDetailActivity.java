@@ -3,6 +3,7 @@ package com.deng.recipes.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,14 +13,15 @@ import android.widget.TextView;
 
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-import com.deng.recipes.InstaMaterialApplication;
+import com.deng.recipes.RecipesApplication;
 import com.deng.recipes.R;
 import com.deng.recipes.Utils;
-import com.deng.recipes.entity.RecipeEntity;
+import com.deng.recipes.model.entity.recipe.RecipeEntity;
 import com.deng.recipes.ui.adapter.CookStepAdapter;
 import com.deng.recipes.ui.adapter.IngredientItemAdapter;
-import com.deng.recipes.ui.view.MyListView;
+import com.deng.recipes.ui.view.ExpandingListView;
 import com.google.common.base.Strings;
 
 /**
@@ -62,10 +64,10 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
     TextView tvDesc;
 
     @BindView(R.id.rvIngredients)
-    MyListView rvIngredients;
+    ExpandingListView rvIngredients;
 
     @BindView(R.id.rvSteps)
-    MyListView rvSteps;
+    ExpandingListView rvSteps;
 
     @BindView(R.id.tipsRoot)
     LinearLayout tipsRoot;
@@ -73,9 +75,14 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
     @BindView(R.id.tvTips)
     TextView tvTips;
 
+    @BindView(R.id.ibMenu)
+    FloatingActionButton actionMenu;
+
+    @BindView(R.id.cvMenuRoot)
+    public View viewSheet;
+
     private CookStepAdapter stepsAdapter;
     private IngredientItemAdapter ingredientItemAdapter;
-    private int drawingStartLocation;
 
     private RecipeEntity recipeEntity;
 
@@ -95,9 +102,9 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
 
     private void setupRecipeInfo() {
         if (recipeEntity.getRecipe().getImages().size() > 0) {
-            ((InstaMaterialApplication) this.getApplicationContext()).getImageLoader()
+            ((RecipesApplication) this.getApplicationContext()).getImageLoader()
                     .displayImage(recipeEntity.getRecipe().getImages().get(0), ivImage,
-                            InstaMaterialApplication.imageOptions()); //
+                            RecipesApplication.imageOptions()); //
         } else {
             ivImage.setVisibility(View.GONE);
         }
@@ -158,6 +165,40 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
                     }
                 })
                 .start();
+    }
+
+
+    public boolean closeFabMenu(){
+        viewSheet.setVisibility(View.GONE);
+        actionMenu.setVisibility(View.VISIBLE);
+
+        return false;
+    }
+
+    @OnClick(R.id.ibMenu)
+    public void onClickFabMenu(){
+        viewSheet.setVisibility(View.VISIBLE);
+        actionMenu.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.rvCookedRoot)
+    public void onClickCook(){
+        closeFabMenu();
+    }
+
+    @OnClick(R.id.rvCollectionRoot)
+    public void onClickCollection(){
+        closeFabMenu();
+    }
+
+    @OnClick(R.id.rvLikeRoot)
+    public void onClickLike(){
+        closeFabMenu();
+    }
+
+    @OnClick(R.id.rvCancelRoot)
+    public void onClickCancel(){
+        closeFabMenu();
     }
 
 }

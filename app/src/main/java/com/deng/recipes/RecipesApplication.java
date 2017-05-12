@@ -1,6 +1,7 @@
 package com.deng.recipes;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 
@@ -23,16 +25,30 @@ import timber.log.Timber;
 /**
  * Created by froger_mcs on 05.11.14.
  */
-public class InstaMaterialApplication extends Application {
+public class RecipesApplication extends Application {
 
     private ImageLoader imageLoader;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mContext = getApplicationContext();
+
+        //腾讯Bugly
+        CrashReport.initCrashReport(getApplicationContext());
+
         Timber.plant(new Timber.DebugTree());
         initImageLoader();
     }
+
+    private static Context mContext;
+
+
+    public static Context getContext() {
+        return mContext;
+    }
+
 
     public ImageLoader getImageLoader() {
         return imageLoader;

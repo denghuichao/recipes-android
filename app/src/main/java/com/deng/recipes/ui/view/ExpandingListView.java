@@ -8,16 +8,16 @@ import android.view.View;
 /**
  * Created by huichaodeng on 2017/4/30.
  */
-public class MyListView extends RecyclerView {
-    public MyListView(Context context, AttributeSet attrs) {
+public class ExpandingListView extends RecyclerView {
+    public ExpandingListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyListView(Context context) {
+    public ExpandingListView(Context context) {
         super(context);
     }
 
-    public MyListView(Context context, AttributeSet attrs, int defStyle) {
+    public ExpandingListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

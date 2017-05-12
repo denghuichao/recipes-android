@@ -9,9 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextSwitcher;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 
@@ -21,11 +20,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.deng.recipes.InstaMaterialApplication;
+import com.deng.recipes.RecipesApplication;
 import com.deng.recipes.R;
-import com.deng.recipes.entity.RecipeEntity;
+import com.deng.recipes.model.entity.recipe.RecipeEntity;
 import com.deng.recipes.ui.activity.RecipeDetailActivity;
-import com.deng.recipes.ui.view.LoadingFeedItemView;
+import com.deng.recipes.ui.view.LoadingRecipeItemView;
 import com.google.common.base.Strings;
 
 /**
@@ -41,13 +40,27 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<RecipeEntity> feedItems = new ArrayList<>();
 
     private Context context;
-    private OnFeedItemClickListener onFeedItemClickListener;
+    //private OnFeedItemClickListener onFeedItemClickListener;
 
     private boolean showLoadingView = false;
 
     public RecipeItemAdapter(Context context, List<RecipeEntity> recipeEntities) {
         this.context = context;
         this.feedItems = recipeEntities;
+    }
+
+    public void setDataList(List<RecipeEntity> datas) {
+        feedItems.clear();
+        if (null != datas) {
+            feedItems.addAll(datas);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void addItems(List<RecipeEntity> datas) {
+        if (null == datas) return;
+        feedItems.addAll(datas);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -58,7 +71,7 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             setupClickableViews(view, cellFeedViewHolder);
             return cellFeedViewHolder;
         } else if (viewType == VIEW_TYPE_LOADER) {
-            LoadingFeedItemView view = new LoadingFeedItemView(context);
+            LoadingRecipeItemView view = new LoadingRecipeItemView(context);
             view.setLayoutParams(new LinearLayoutCompat.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -92,14 +105,14 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void bindLoadingFeedItem(final LoadingCellFeedViewHolder holder) {
-        holder.loadingFeedItemView.setOnLoadingFinishedListener(new LoadingFeedItemView.OnLoadingFinishedListener() {
+        holder.loadingRecipeItemView.setOnLoadingFinishedListener(new LoadingRecipeItemView.OnLoadingFinishedListener() {
             @Override
             public void onLoadingFinished() {
                 showLoadingView = false;
                 notifyItemChanged(0);
             }
         });
-        holder.loadingFeedItemView.startLoading();
+        holder.loadingRecipeItemView.startLoading();
     }
 
     @Override
@@ -116,7 +129,6 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return feedItems.size();
     }
 
-    //must look again
     public void updateItems(List<RecipeEntity> recipeEntities, boolean animated) {
         feedItems.addAll(recipeEntities);
         if (animated) {
@@ -126,9 +138,9 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void setOnFeedItemClickListener(OnFeedItemClickListener onFeedItemClickListener) {
-        this.onFeedItemClickListener = onFeedItemClickListener;
-    }
+//    public void setOnFeedItemClickListener(OnFeedItemClickListener onFeedItemClickListener) {
+//        this.onFeedItemClickListener = onFeedItemClickListener;
+//    }
 
     public void showLoadingView() {
         showLoadingView = true;
@@ -144,6 +156,9 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView ivLike;
         @BindView(R.id.vImageRoot)
         FrameLayout vImageRoot;
+
+        @BindView(R.id.rating)
+        RatingBar rbRating;
 
         @BindView(R.id.tvTitle)
         TextView tvTitle;
@@ -165,9 +180,9 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void bindView(RecipeEntity feedItem) {
             this.feedItem = feedItem;
             if (feedItem.getRecipe().getImages().size() > 0) {
-                ((InstaMaterialApplication) context.getApplicationContext()).getImageLoader()
+                ((RecipesApplication) context.getApplicationContext()).getImageLoader()
                         .displayImage(feedItem.getRecipe().getImages().get(0), ivFeedCenter,
-                                InstaMaterialApplication.imageOptions()); //
+                                RecipesApplication.imageOptions()); //
             }
 
             tvTitle.setText(feedItem.getRecipe().getTitle());
@@ -175,6 +190,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 tvDesc.setVisibility(View.GONE);
             else
                 tvDesc.setText(feedItem.getRecipe().getDesc());
+
+            rbRating.setRating(feedItem.getRecipe().getScore());
         }
 
         public RecipeEntity getFeedItem() {
@@ -184,11 +201,11 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public static class LoadingCellFeedViewHolder extends CellFeedViewHolder {
 
-        LoadingFeedItemView loadingFeedItemView;
+        LoadingRecipeItemView loadingRecipeItemView;
 
-        public LoadingCellFeedViewHolder(LoadingFeedItemView view, Context context) {
+        public LoadingCellFeedViewHolder(LoadingRecipeItemView view, Context context) {
             super(view, context);
-            this.loadingFeedItemView = view;
+            this.loadingRecipeItemView = view;
         }
 
         @Override
@@ -197,8 +214,8 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public interface OnFeedItemClickListener {
-
-        void onMoreClick(View v, int position);
-    }
+//    public interface OnFeedItemClickListener {
+//
+//        void onMoreClick(View v, int position);
+//    }
 }

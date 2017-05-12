@@ -1,5 +1,4 @@
-package com.deng.recipes.entity;
-
+package com.deng.recipes.model.entity.recipe;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +40,16 @@ public class Recipe implements Serializable{
     private int cookedNum;
 
     private int collectedNum;
+
+    private float score = 3f;
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
 
     public String getTitle() {
         return title;

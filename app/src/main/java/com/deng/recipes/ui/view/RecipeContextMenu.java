@@ -14,14 +14,14 @@ import com.deng.recipes.Utils;
 /**
  * Created by froger_mcs on 15.12.14.
  */
-public class FeedContextMenu extends LinearLayout {
+public class RecipeContextMenu extends LinearLayout {
     private static final int CONTEXT_MENU_WIDTH = Utils.dpToPx(240);
 
     private int feedItem = -1;
 
     private OnFeedContextMenuItemClickListener onItemClickListener;
 
-    public FeedContextMenu(Context context) {
+    public RecipeContextMenu(Context context) {
         super(context);
         init();
     }
@@ -44,7 +44,7 @@ public class FeedContextMenu extends LinearLayout {
     }
 
     public void dismiss() {
-        ((ViewGroup) getParent()).removeView(FeedContextMenu.this);
+        ((ViewGroup) getParent()).removeView(RecipeContextMenu.this);
     }
 
     @OnClick(R.id.btnReport)

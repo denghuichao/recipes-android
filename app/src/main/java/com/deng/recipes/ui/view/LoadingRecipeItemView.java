@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Miroslaw Stanek on 09.12.2015.
  */
-public class LoadingFeedItemView extends FrameLayout {
+public class LoadingRecipeItemView extends FrameLayout {
 
     @BindView(R.id.vSendingProgress)
     SendingProgressView vSendingProgress;
@@ -28,23 +28,23 @@ public class LoadingFeedItemView extends FrameLayout {
 
     private OnLoadingFinishedListener onLoadingFinishedListener;
 
-    public LoadingFeedItemView(Context context) {
+    public LoadingRecipeItemView(Context context) {
         super(context);
         init();
     }
 
-    public LoadingFeedItemView(Context context, AttributeSet attrs) {
+    public LoadingRecipeItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public LoadingFeedItemView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LoadingRecipeItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public LoadingFeedItemView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public LoadingRecipeItemView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }

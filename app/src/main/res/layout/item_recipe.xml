@@ -73,7 +73,7 @@
             android:layout_margin="5dp"
             android:ellipsize="end"
             android:maxLines="5"
-            android:text="@string/recipe_desc"
+            android:text=""
             android:textSize="@dimen/content_text_size" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

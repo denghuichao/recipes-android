@@ -15,9 +15,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
-import com.deng.recipes.InstaMaterialApplication;
+import com.deng.recipes.RecipesApplication;
 import com.deng.recipes.R;
-import com.deng.recipes.entity.CookStep;
+import com.deng.recipes.model.entity.recipe.CookStep;
 import com.google.common.base.Strings;
 
 /**
@@ -52,9 +52,9 @@ public class CookStepAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.tvDesc.setText(cookStep.getDescription());
         holder.tvStepOrder.setText("第"+String.valueOf(cookStep.getStepOrder())+"步");
         if(!Strings.isNullOrEmpty(cookStep.getImage())) {
-            ((InstaMaterialApplication) context.getApplicationContext()).getImageLoader()
+            ((RecipesApplication) context.getApplicationContext()).getImageLoader()
                     .displayImage(cookStep.getImage(), holder.ivImage,
-                            InstaMaterialApplication.imageOptions()); //
+                            RecipesApplication.imageOptions()); //
         }
         else{
             holder.ivImage.setVisibility(View.GONE);

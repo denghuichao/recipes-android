@@ -14,27 +14,27 @@ import com.deng.recipes.Utils;
 /**
  * Created by froger_mcs on 16.12.14.
  */
-public class FeedContextMenuManager extends RecyclerView.OnScrollListener implements View.OnAttachStateChangeListener {
+public class RecipeContextMenuManager extends RecyclerView.OnScrollListener implements View.OnAttachStateChangeListener {
 
-    private static FeedContextMenuManager instance;
+    private static RecipeContextMenuManager instance;
 
-    private FeedContextMenu contextMenuView;
+    private RecipeContextMenu contextMenuView;
 
     private boolean isContextMenuDismissing;
     private boolean isContextMenuShowing;
 
-    public static FeedContextMenuManager getInstance() {
+    public static RecipeContextMenuManager getInstance() {
         if (instance == null) {
-            instance = new FeedContextMenuManager();
+            instance = new RecipeContextMenuManager();
         }
         return instance;
     }
 
-    private FeedContextMenuManager() {
+    private RecipeContextMenuManager() {
 
     }
 
-public void toggleContextMenuFromView(View openingView, int feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
+public void toggleContextMenuFromView(View openingView, int feedItem, RecipeContextMenu.OnFeedContextMenuItemClickListener listener) {
     if (contextMenuView == null) {
         showContextMenuFromView(openingView, feedItem, listener);
     } else {
@@ -42,10 +42,10 @@ public void toggleContextMenuFromView(View openingView, int feedItem, FeedContex
     }
 }
 
-    private void showContextMenuFromView(final View openingView, int feedItem, FeedContextMenu.OnFeedContextMenuItemClickListener listener) {
+    private void showContextMenuFromView(final View openingView, int feedItem, RecipeContextMenu.OnFeedContextMenuItemClickListener listener) {
         if (!isContextMenuShowing) {
             isContextMenuShowing = true;
-            contextMenuView = new FeedContextMenu(openingView.getContext());
+            contextMenuView = new RecipeContextMenu(openingView.getContext());
             contextMenuView.bindToItem(feedItem);
             contextMenuView.addOnAttachStateChangeListener(this);
             contextMenuView.setOnFeedMenuItemClickListener(listener);
