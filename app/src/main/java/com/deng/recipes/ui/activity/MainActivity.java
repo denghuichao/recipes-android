@@ -144,28 +144,38 @@ public class MainActivity extends BaseDrawerActivity
 
 
     @Override
-    public void onCookListUpdateRefreshSuccess(ArrayList<RecipeEntity> list) {
+    public void onRecipesUpdateRefreshSuccess(ArrayList<RecipeEntity> list) {
         resetReflashStatus();
         feedAdapter.setDataList(list);
         feedAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onCookListUpdateRefreshFail(String msg) {
+    public void onRecipesUpdateRefreshFail(String msg) {
         resetReflashStatus();
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onCookListLoadMoreSuccess(ArrayList<RecipeEntity> list) {
+    public void onRecipesLoadMoreSuccess(ArrayList<RecipeEntity> list) {
         resetReflashStatus();
         feedAdapter.addItems(list);
     }
 
     @Override
-    public void onCookListLoadMoreFail(String msg) {
+    public void onRecipesLoadMoreFail(String msg) {
         resetReflashStatus();
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRecipeUpdateRefreshSuccess(RecipeEntity entity) {
+
+    }
+
+    @Override
+    public void onRecipeUpdateRefreshFail(String msg) {
+
     }
 
     private void resetReflashStatus(){

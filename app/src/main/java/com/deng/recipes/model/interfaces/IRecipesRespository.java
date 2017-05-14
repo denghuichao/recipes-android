@@ -1,8 +1,11 @@
 package com.deng.recipes.model.interfaces;
 
+import com.deng.recipes.constants.Constants;
 import com.deng.recipes.model.entity.recipe.subscriber.NumberSubscriberResultInfo;
 import com.deng.recipes.model.entity.recipe.subscriber.RecipeSubscriberResultInfo;
 
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
@@ -10,6 +13,8 @@ import rx.Observable;
  */
 
 public interface IRecipesRespository {
+
+    Observable<RecipeSubscriberResultInfo> getRecipeById(String id);
 
     Observable<RecipeSubscriberResultInfo> getRecommendationRecipes(int pageSize, int pageIndex);
 

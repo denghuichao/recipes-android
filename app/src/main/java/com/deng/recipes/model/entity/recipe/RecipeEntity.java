@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class RecipeEntity implements Serializable{
 
-    private  String ID;
+    private  String id;
 
     private Recipe recipe;
 
@@ -19,7 +19,7 @@ public class RecipeEntity implements Serializable{
     }
 
     public RecipeEntity(String ID, Recipe recipe, List<CookStep> cookSteps) {
-        this.ID = ID;
+        this.id = ID;
         this.recipe = recipe;
         this.cookSteps = cookSteps;
     }
@@ -41,11 +41,11 @@ public class RecipeEntity implements Serializable{
         this.cookSteps = cookSteps;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 }

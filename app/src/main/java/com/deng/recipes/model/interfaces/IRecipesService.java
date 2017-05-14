@@ -6,6 +6,7 @@ import com.deng.recipes.model.entity.recipe.subscriber.RecipeSubscriberResultInf
 
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -14,6 +15,9 @@ import rx.Observable;
  */
 
 public interface IRecipesService {
+
+    @GET(Constants.Recipe_Service_GET)
+    Observable<RecipeSubscriberResultInfo> getRecipeById(@Path(Constants.Recipe_Parameter_ID) String id);
 
     @GET(Constants.Recipe_Service_Recommendation)
     Observable<RecipeSubscriberResultInfo> getRecommendationRecipes(

@@ -9,6 +9,7 @@ public final class Constants {
 
     public final static String baseURL = "http://115.159.65.223:8080/";
 
+    public final static String Recipe_Service_GET = "/restapi/recipes/";//
     public final static String Recipe_Service_Recommendation = "/restapi/recipes/recommendation";//
     public final static String Recipe_Service_Search = "/restapi/recipes/search";//
     public final static String Recipe_Servic_CollectionQuery = "/restapi/recipes/collections";

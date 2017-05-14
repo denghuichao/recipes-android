@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 public interface IRecipeListView {
 
-    public void onCookListUpdateRefreshSuccess(ArrayList<RecipeEntity> list);
-    public void onCookListUpdateRefreshFail(String msg);
-    public void onCookListLoadMoreSuccess(ArrayList<RecipeEntity> list);
-    public void onCookListLoadMoreFail(String msg);
+    public void onRecipesUpdateRefreshSuccess(ArrayList<RecipeEntity> list);
+    public void onRecipesUpdateRefreshFail(String msg);
+    public void onRecipesLoadMoreSuccess(ArrayList<RecipeEntity> list);
+    public void onRecipesLoadMoreFail(String msg);
+    public void onRecipeUpdateRefreshSuccess(RecipeEntity entity);
+    public void onRecipeUpdateRefreshFail(String msg);
 }

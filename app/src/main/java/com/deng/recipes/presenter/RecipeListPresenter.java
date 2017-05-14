@@ -31,12 +31,16 @@ public class RecipeListPresenter extends Presenter{
     }
 
     public void destroy(){
-        if(updateRefreshCookMenuByIDSubscriber != null){
-            updateRefreshCookMenuByIDSubscriber.unsubscribe();
+        if(refreshRecipesSubscriber != null){
+            refreshRecipesSubscriber.unsubscribe();
         }
 
         if(loadMoreRecipesSubscriber != null){
             loadMoreRecipesSubscriber.unsubscribe();
+        }
+
+        if(refreshRecipeSubscriber != null){
+            refreshRecipeSubscriber.unsubscribe();
         }
     }
 
@@ -44,7 +48,7 @@ public class RecipeListPresenter extends Presenter{
         curPage = 0;
         rxJavaExecuter.execute(
                 iRecipesRespository.getRecommendationRecipes(Constants.Per_Page_Size,curPage)
-                , updateRefreshCookMenuByIDSubscriber = new UpdateRefreshCookMenuByIDSubscriber()
+                , refreshRecipesSubscriber = new RefreshRecipesSubscriber()
         );
     }
 
@@ -53,13 +57,21 @@ public class RecipeListPresenter extends Presenter{
         if(curPage > totalPages){
             curPage--;
             if(iRecipeListView != null)
-                iRecipeListView.onCookListLoadMoreFail(context.getString(R.string.toast_msg_no_more_data));
+                iRecipeListView.onRecipesLoadMoreFail(context.getString(R.string.toast_msg_no_more_data));
             return ;
         }
 
         rxJavaExecuter.execute(
                 iRecipesRespository.getRecommendationRecipes(Constants.Per_Page_Size, curPage)
                 , loadMoreRecipesSubscriber = new LoadMoreRecipesSubscriber()
+        );
+    }
+
+    public void updateRefreshRecipe(String id){
+        curPage = 0;
+        rxJavaExecuter.execute(
+                iRecipesRespository.getRecipeById(id)
+                , refreshRecipeSubscriber = new RefreshRecipeSubscriber()
         );
     }
 
@@ -77,7 +89,7 @@ public class RecipeListPresenter extends Presenter{
             }
 
             if(iRecipeListView != null)
-                iRecipeListView.onCookListLoadMoreFail(e.getMessage());
+                iRecipeListView.onRecipesLoadMoreFail(e.getMessage());
 
         }
 
@@ -85,14 +97,14 @@ public class RecipeListPresenter extends Presenter{
         public void onNext(RecipeSubscriberResultInfo data){
 
             if(iRecipeListView != null)
-                iRecipeListView.onCookListLoadMoreSuccess(data.getResult().getList());
+                iRecipeListView.onRecipesLoadMoreSuccess(data.getResult().getList());
 
             this.onCompleted();
         }
     }
 
-    private UpdateRefreshCookMenuByIDSubscriber updateRefreshCookMenuByIDSubscriber;
-    private class UpdateRefreshCookMenuByIDSubscriber extends Subscriber<RecipeSubscriberResultInfo> {
+    private RefreshRecipesSubscriber refreshRecipesSubscriber;
+    private class RefreshRecipesSubscriber extends Subscriber<RecipeSubscriberResultInfo> {
         @Override
         public void onCompleted(){
 
@@ -100,12 +112,12 @@ public class RecipeListPresenter extends Presenter{
 
         @Override
         public void onError(Throwable e){
-            if(updateRefreshCookMenuByIDSubscriber != null){
-                updateRefreshCookMenuByIDSubscriber.unsubscribe();
+            if(refreshRecipesSubscriber != null){
+                refreshRecipesSubscriber.unsubscribe();
             }
 
             if(iRecipeListView != null)
-                iRecipeListView.onCookListUpdateRefreshFail(e.getMessage());
+                iRecipeListView.onRecipesUpdateRefreshFail(e.getMessage());
 
         }
 
@@ -114,7 +126,36 @@ public class RecipeListPresenter extends Presenter{
             totalPages = (data.getResult().getTotal() + Constants.Per_Page_Size - 1) / Constants.Per_Page_Size;
 
             if(iRecipeListView != null)
-                iRecipeListView.onCookListUpdateRefreshSuccess(data.getResult().getList());
+                iRecipeListView.onRecipesUpdateRefreshSuccess(data.getResult().getList());
+
+            this.onCompleted();
+        }
+    }
+
+    private RefreshRecipeSubscriber refreshRecipeSubscriber;
+    private class RefreshRecipeSubscriber extends Subscriber<RecipeSubscriberResultInfo> {
+        @Override
+        public void onCompleted(){
+
+        }
+
+        @Override
+        public void onError(Throwable e){
+            if(refreshRecipeSubscriber != null){
+                refreshRecipeSubscriber.unsubscribe();
+            }
+
+            if(iRecipeListView != null)
+                iRecipeListView.onRecipeUpdateRefreshFail(e.getMessage());
+
+        }
+
+        @Override
+        public void onNext(RecipeSubscriberResultInfo data){
+            totalPages = (data.getResult().getTotal() + Constants.Per_Page_Size - 1) / Constants.Per_Page_Size;
+
+            if(iRecipeListView != null)
+                iRecipeListView.onRecipeUpdateRefreshSuccess(data.getResult().getList().get(0));
 
             this.onCompleted();
         }

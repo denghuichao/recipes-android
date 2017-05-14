@@ -24,6 +24,12 @@ public class RecipesRespository implements IRecipesRespository {
     }
 
     @Override
+    public Observable<RecipeSubscriberResultInfo> getRecipeById(String id) {
+        IRecipesService iRecipesService = RetrofitService.getInstance().createApi(IRecipesService.class);
+        return iRecipesService.getRecipeById(id);
+    }
+
+    @Override
     public Observable<RecipeSubscriberResultInfo> getRecommendationRecipes(int pageSize, int pageIndex) {
         IRecipesService iRecipesService = RetrofitService.getInstance().createApi(IRecipesService.class);
         return iRecipesService.getRecommendationRecipes(pageSize, pageIndex);

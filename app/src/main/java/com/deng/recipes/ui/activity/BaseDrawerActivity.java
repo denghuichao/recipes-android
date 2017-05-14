@@ -10,6 +10,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import com.deng.recipes.R;
 
@@ -34,12 +37,17 @@ public class BaseDrawerActivity extends AppCompatActivity {
     @BindView(R.id.ivLogo)
     TextView ivLogo;
 
+    Animation mShowAction;
+
+    Animation mHiddenAction;
+
     @Override
     public void setContentView(int layoutResID) {
         setContentViewWithoutInject(R.layout.activity_drawer);
         ViewGroup viewGroup = (ViewGroup) findViewById(R.id.flContentRoot);
         LayoutInflater.from(this).inflate(layoutResID, viewGroup, true);
         bindViews();
+        initAnimations();
     }
 
 
@@ -65,6 +73,17 @@ public class BaseDrawerActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void initAnimations() {
+
+        mShowAction = AnimationUtils.loadAnimation(this,
+                R.anim.slide_in_from_right);
+        mShowAction.setFillAfter(true);
+
+        mHiddenAction = AnimationUtils.loadAnimation(this,
+                R.anim.slide_out_to_right);
+        mHiddenAction.setFillAfter(true);
     }
 
 }
