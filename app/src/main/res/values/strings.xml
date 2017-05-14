@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
-    <string name="app_name">Daily Recipes</string>
+    <string name="app_name">天天美食</string>
     <plurals name="likes_count">
         <item quantity="one">%d人喜欢</item>
         <item quantity="other">%d人喜欢</item>

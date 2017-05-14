@@ -175,11 +175,17 @@ public class RecipeDetailActivity extends BaseDrawerActivity {
         return false;
     }
 
-    @OnClick(R.id.ibMenu)
-    public void onClickFabMenu(){
+    private void openFabMenu(){
         viewSheet.setVisibility(View.VISIBLE);
         actionMenu.setVisibility(View.GONE);
     }
+
+    @OnClick(R.id.ibMenu)
+    public void onClickFabMenu(){
+       openFabMenu();
+    }
+
+
 
     @OnClick(R.id.rvCookedRoot)
     public void onClickCook(){

@@ -50,6 +50,7 @@
             android:layout_height="match_parent"
             android:layout_alignBottom="@id/vImageRoot"
             android:numStars="5"
+            android:visibility="gone"
             android:rating="3" />
 
         <TextView

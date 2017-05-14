@@ -11,8 +11,9 @@ import java.util.ArrayList;
 
 public interface IRecipeSearchView {
 
-    public void onCookSearchSuccess(ArrayList<RecipeEntity> list, int totalPages);
-    public void onCookSearchFaile(String msg);
-    public void onCookSearchEmpty();
+    public void onCookSearchSuccess(ArrayList<RecipeEntity> list);
+    public void onCookSearchFail(String msg);
+    public void onCookSearchMoreSuccess(ArrayList<RecipeEntity> list);
+    public void onCookSearchMoreFail(String msg);
 
 }

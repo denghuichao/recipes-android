@@ -2,6 +2,7 @@ package com.deng.recipes.presenter;
 
 import android.content.Context;
 
+import com.deng.recipes.R;
 import com.deng.recipes.iview.IRecipeSearchView;
 import com.deng.recipes.constants.Constants;
 import com.deng.recipes.model.entity.recipe.subscriber.RecipeSubscriberResultInfo;
@@ -14,12 +15,15 @@ import rx.Subscriber;
  * Created by Administrator on 2017/2/22.
  */
 
-public class RecipeSearchPresenter extends Presenter{
+public class RecipeSearchPresenter extends Presenter {
 
     private IRecipeSearchView iRecipeSearchView;
     private IRecipesRespository iRecipesRespository;
 
-    public RecipeSearchPresenter(Context context, IRecipeSearchView iRecipeSearchView){
+    private int curPage = 0;
+    private int totalPages = 0;
+
+    public RecipeSearchPresenter(Context context, IRecipeSearchView iRecipeSearchView) {
         super(context);
 
         this.iRecipeSearchView = iRecipeSearchView;
@@ -27,22 +31,38 @@ public class RecipeSearchPresenter extends Presenter{
     }
 
     @Override
-    public void destroy(){
-        if(searchRecipeSubscriber != null){
+    public void destroy() {
+        if (searchRecipeSubscriber != null) {
             searchRecipeSubscriber.unsubscribe();
         }
     }
 
-    public void search(String queryString){
+    public void search(String queryString) {
+        curPage = 0;
         rxJavaExecuter.execute(
-                iRecipesRespository.searchRecipes(Constants.Per_Page_Size, 1, queryString)
+                iRecipesRespository.searchRecipes(Constants.Per_Page_Size, curPage, queryString)
+                , searchRecipeSubscriber = new SearchRecipeSubscriber()
+        );
+    }
+
+    public void searchMore(String queryString) {
+        curPage++;
+        if(curPage > totalPages){
+            curPage--;
+            if(iRecipeSearchView != null)
+                iRecipeSearchView.onCookSearchMoreFail(context.getString(R.string.toast_msg_no_more_data));
+            return ;
+        }
+
+        rxJavaExecuter.execute(
+                iRecipesRespository.searchRecipes(Constants.Per_Page_Size, curPage, queryString)
                 , searchRecipeSubscriber = new SearchRecipeSubscriber()
         );
     }
 
 
-    private SearchRecipeSubscriber searchRecipeSubscriber;
-    private class SearchRecipeSubscriber extends Subscriber<RecipeSubscriberResultInfo> {
+    private SearchMoreRecipesSubscriber searchMoreRecipesSubscriber;
+    private class SearchMoreRecipesSubscriber extends Subscriber<RecipeSubscriberResultInfo> {
         @Override
         public void onCompleted(){
 
@@ -50,36 +70,61 @@ public class RecipeSearchPresenter extends Presenter{
 
         @Override
         public void onError(Throwable e){
-            if(searchRecipeSubscriber != null){
-                searchRecipeSubscriber.unsubscribe();
+            if(searchMoreRecipesSubscriber != null){
+                searchMoreRecipesSubscriber.unsubscribe();
             }
 
-
             if(iRecipeSearchView != null)
-                iRecipeSearchView.onCookSearchFaile(e.getMessage());
+                iRecipeSearchView.onCookSearchMoreFail(e.getMessage());
 
         }
 
         @Override
         public void onNext(RecipeSubscriberResultInfo data){
 
-            if(data == null || data.getResult() == null){
-                if(iRecipeSearchView != null)
-                    iRecipeSearchView.onCookSearchFaile("找不到相关菜谱");
+            if(iRecipeSearchView != null)
+                iRecipeSearchView.onCookSearchMoreSuccess(data.getResult().getList());
 
-                this.onCompleted();
-                return ;
+            this.onCompleted();
+        }
+    }
+
+    private SearchRecipeSubscriber searchRecipeSubscriber;
+    private class SearchRecipeSubscriber extends Subscriber<RecipeSubscriberResultInfo> {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            if (searchRecipeSubscriber != null) {
+                searchRecipeSubscriber.unsubscribe();
             }
 
-            int totalPages = data.getResult().getTotal();
 
-            if(iRecipeSearchView != null) {
-                if(data.getResult().getList().size() < 1){
-                    iRecipeSearchView.onCookSearchEmpty();
-                }
-                else {
-                    iRecipeSearchView.onCookSearchSuccess(data.getResult().getList(), totalPages);
-                }
+            if (iRecipeSearchView != null)
+                iRecipeSearchView.onCookSearchFail(e.getMessage());
+
+        }
+
+        @Override
+        public void onNext(RecipeSubscriberResultInfo data) {
+
+            if (data == null || data.getResult() == null) {
+                if (iRecipeSearchView != null)
+                    iRecipeSearchView.onCookSearchFail("找不到相关菜谱");
+
+                this.onCompleted();
+                return;
+            }
+
+            int totalPages = (data.getResult().getTotal() + Constants.Per_Page_Size - 1) / Constants.Per_Page_Size;
+
+            if (iRecipeSearchView != null) {
+
+                iRecipeSearchView.onCookSearchSuccess(data.getResult().getList());
+
             }
 
             this.onCompleted();

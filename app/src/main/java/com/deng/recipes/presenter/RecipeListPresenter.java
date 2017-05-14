@@ -111,7 +111,7 @@ public class RecipeListPresenter extends Presenter{
 
         @Override
         public void onNext(RecipeSubscriberResultInfo data){
-            totalPages = data.getResult().getTotal();
+            totalPages = (data.getResult().getTotal() + Constants.Per_Page_Size - 1) / Constants.Per_Page_Size;
 
             if(iRecipeListView != null)
                 iRecipeListView.onCookListUpdateRefreshSuccess(data.getResult().getList());

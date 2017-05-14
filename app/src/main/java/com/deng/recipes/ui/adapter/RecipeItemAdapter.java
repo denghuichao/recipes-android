@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -30,7 +32,7 @@ import com.google.common.base.Strings;
 /**
  * Created by froger_mcs on 05.11.14.
  */
-public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecipeItemAdapter extends BaseAdapter {
     public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
     public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";
 
@@ -63,24 +65,6 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_DEFAULT) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_recipe, parent, false);
-            CellFeedViewHolder cellFeedViewHolder = new CellFeedViewHolder(view, context);
-            setupClickableViews(view, cellFeedViewHolder);
-            return cellFeedViewHolder;
-        } else if (viewType == VIEW_TYPE_LOADER) {
-            LoadingRecipeItemView view = new LoadingRecipeItemView(context);
-            view.setLayoutParams(new LinearLayoutCompat.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT)
-            );
-            return new LoadingCellFeedViewHolder(view, context);
-        }
-
-        return null;
-    }
 
     private void setupClickableViews(final View view, final CellFeedViewHolder cellFeedViewHolder) {
         cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
@@ -95,127 +79,95 @@ public class RecipeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ((CellFeedViewHolder) viewHolder).bindView(feedItems.get(position));
-
-        if (getItemViewType(position) == VIEW_TYPE_LOADER) {
-            bindLoadingFeedItem((LoadingCellFeedViewHolder) viewHolder);
-        }
-    }
-
-    private void bindLoadingFeedItem(final LoadingCellFeedViewHolder holder) {
-        holder.loadingRecipeItemView.setOnLoadingFinishedListener(new LoadingRecipeItemView.OnLoadingFinishedListener() {
-            @Override
-            public void onLoadingFinished() {
-                showLoadingView = false;
-                notifyItemChanged(0);
-            }
-        });
-        holder.loadingRecipeItemView.startLoading();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (showLoadingView && position == 0) {
-            return VIEW_TYPE_LOADER;
-        } else {
-            return VIEW_TYPE_DEFAULT;
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return feedItems.size();
-    }
 
     public void updateItems(List<RecipeEntity> recipeEntities, boolean animated) {
         feedItems.addAll(recipeEntities);
-        if (animated) {
-            notifyItemRangeInserted(0, feedItems.size());
-        } else {
-            notifyDataSetChanged();
-        }
+        notifyDataSetChanged();
+
     }
 
-//    public void setOnFeedItemClickListener(OnFeedItemClickListener onFeedItemClickListener) {
-//        this.onFeedItemClickListener = onFeedItemClickListener;
-//    }
 
-    public void showLoadingView() {
-        showLoadingView = true;
-        notifyItemChanged(0);
-    }
-
-    public static class CellFeedViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.ivImage)
+    public static class CellFeedViewHolder {
         ImageView ivFeedCenter;
-        @BindView(R.id.vBgLike)
         View vBgLike;
-        @BindView(R.id.ivLike)
         ImageView ivLike;
-        @BindView(R.id.vImageRoot)
         FrameLayout vImageRoot;
-
-        @BindView(R.id.rating)
         RatingBar rbRating;
-
-        @BindView(R.id.tvTitle)
         TextView tvTitle;
-
-        @BindView(R.id.tvDesc)
         TextView tvDesc;
 
-        private RecipeEntity feedItem;
+        RecipeEntity recipeEntity;
 
-        private Context context;
-
-        public CellFeedViewHolder(View view, Context context) {
-            super(view);
-            this.context = context;
-            ButterKnife.bind(this, view);
-
+        public CellFeedViewHolder(RecipeEntity feedItem) {
+            this.recipeEntity = feedItem;
         }
 
-        public void bindView(RecipeEntity feedItem) {
-            this.feedItem = feedItem;
-            if (feedItem.getRecipe().getImages().size() > 0) {
-                ((RecipesApplication) context.getApplicationContext()).getImageLoader()
-                        .displayImage(feedItem.getRecipe().getImages().get(0), ivFeedCenter,
-                                RecipesApplication.imageOptions()); //
-            }
-
-            tvTitle.setText(feedItem.getRecipe().getTitle());
-            if (Strings.isNullOrEmpty(feedItem.getRecipe().getDesc()))
-                tvDesc.setVisibility(View.GONE);
-            else
-                tvDesc.setText(feedItem.getRecipe().getDesc());
-
-            rbRating.setRating(feedItem.getRecipe().getScore());
-        }
 
         public RecipeEntity getFeedItem() {
-            return feedItem;
+            return recipeEntity;
         }
     }
 
-    public static class LoadingCellFeedViewHolder extends CellFeedViewHolder {
 
-        LoadingRecipeItemView loadingRecipeItemView;
-
-        public LoadingCellFeedViewHolder(LoadingRecipeItemView view, Context context) {
-            super(view, context);
-            this.loadingRecipeItemView = view;
-        }
-
-        @Override
-        public void bindView(RecipeEntity feedItem) {
-            super.bindView(feedItem);
-        }
+    @Override
+    public int getCount() {
+        return feedItems.size();
     }
 
-//    public interface OnFeedItemClickListener {
-//
-//        void onMoreClick(View v, int position);
-//    }
+    @Override
+    public Object getItem(int i) {
+        return feedItems.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final RecipeEntity recipeEntity = feedItems.get(position);
+        final CellFeedViewHolder holder;
+        if (convertView == null) {
+            convertView = View.inflate(context, R.layout.item_recipe, null);
+            holder = new CellFeedViewHolder(recipeEntity);
+
+            holder.ivFeedCenter = (ImageView) convertView.findViewById(R.id.ivImage);
+
+            holder.vBgLike = convertView.findViewById(R.id.vBgLike);
+
+            holder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
+
+            holder.vImageRoot = (FrameLayout) convertView.findViewById(R.id.vImageRoot);
+
+            holder.rbRating = (RatingBar) convertView.findViewById(R.id.rating);
+
+            holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+
+            holder.tvDesc = (TextView) convertView.findViewById(R.id.tvDesc);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (CellFeedViewHolder) convertView.getTag();
+        }
+
+        if (holder.recipeEntity.getRecipe().getImages().size() > 0) {
+            ((RecipesApplication) context.getApplicationContext()).getImageLoader()
+                    .displayImage(holder.recipeEntity.getRecipe().getImages().get(0), holder.ivFeedCenter,
+                            RecipesApplication.imageOptions()); //
+        }
+
+        holder.tvTitle.setText(holder.recipeEntity.getRecipe().getTitle());
+        if (Strings.isNullOrEmpty(holder.recipeEntity.getRecipe().getDesc()))
+            holder.tvDesc.setVisibility(View.GONE);
+        else
+            holder.tvDesc.setText(holder.recipeEntity.getRecipe().getDesc());
+
+        holder.rbRating.setRating(holder.recipeEntity.getRecipe().getScore());
+
+        setupClickableViews(convertView, holder);
+
+        return convertView;
+    }
+
 }

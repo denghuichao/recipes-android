@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
-import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -24,13 +23,11 @@ import com.deng.recipes.iview.IRecipeListView;
 import com.deng.recipes.model.entity.recipe.RecipeEntity;
 import com.deng.recipes.presenter.RecipeListPresenter;
 import com.deng.recipes.ui.adapter.RecipeItemAdapter;
-import com.deng.recipes.ui.adapter.RecipeItemAnimator;
-import com.deng.recipes.ui.view.RecipeContextMenuManager;
-import com.google.common.collect.Lists;
+import com.deng.recipes.ui.view.SwipeRefreshView;
 
 
 public class MainActivity extends BaseDrawerActivity
-        implements SwipeRefreshLayout.OnRefreshListener, IRecipeListView
+        implements IRecipeListView
 {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
 
@@ -38,12 +35,12 @@ public class MainActivity extends BaseDrawerActivity
     private static final int ANIM_DURATION_FAB = 400;
 
     @BindView(R.id.rvFeed)
-    RecyclerView mRecyclerView;
+    ListView mRecyclerView;
     @BindView(R.id.content)
     CoordinatorLayout clContent;
 
     @BindView(R.id.swipe_refresh_widget)
-    SwipeRefreshLayout mSwipeRefreshWidget;
+    SwipeRefreshView mSwipeRefreshWidget;
 
     private LinearLayoutManager mLayoutManager;
 
@@ -52,13 +49,6 @@ public class MainActivity extends BaseDrawerActivity
 
     private RecipeListPresenter recipeListPresenter;
 
-    private Handler handler = new Handler();
-
-    private int lastVisibleItem = 0;
-
-    private boolean loadMore;
-
-    private boolean isRefresh;
 
 
     @Override
@@ -82,7 +72,6 @@ public class MainActivity extends BaseDrawerActivity
         //设置下拉圆圈的大小，两个值 LARGE， DEFAULT
         mSwipeRefreshWidget.setSize(SwipeRefreshLayout.LARGE);
 
-        mSwipeRefreshWidget.setOnRefreshListener(this);
 
         mSwipeRefreshWidget.setProgressViewOffset(false, 0, (int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
@@ -94,30 +83,36 @@ public class MainActivity extends BaseDrawerActivity
                 return 300;
             }
         };
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        //mRecyclerView.setLayoutManager(mLayoutManager);
         feedAdapter = new RecipeItemAdapter(this, recipeEntities);
         mRecyclerView.setAdapter(feedAdapter);
-        mRecyclerView.setItemAnimator(new RecipeItemAnimator());
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastVisibleItem + 1 == feedAdapter.getItemCount()) {
-                    loadMore = true;
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-            }
-
-        });
+        //mRecyclerView.setItemAnimator(new RecipeItemAnimator());
 
         recipeListPresenter = new RecipeListPresenter(this, this);
+
+        mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+
+                Toast.makeText(MainActivity.this, "refresh", Toast.LENGTH_SHORT).show();
+                recipeListPresenter.updateRefreshRecipes();
+            }
+        });
+
+        // 加载监听器
+        mSwipeRefreshWidget.setOnLoadListener(new SwipeRefreshView.OnLoadListener() {
+
+            @Override
+            public void onLoad() {
+
+                Toast.makeText(MainActivity.this, "load", Toast.LENGTH_SHORT).show();
+                recipeListPresenter.loadMoreRecipes();
+
+            }
+        });
+
+        recipeListPresenter.updateRefreshRecipes();
     }
 
 
@@ -134,29 +129,19 @@ public class MainActivity extends BaseDrawerActivity
             @Override
             public void run() {
                 mRecyclerView.smoothScrollToPosition(0);
-                feedAdapter.showLoadingView();
+                //feedAdapter.showLoadingView();
             }
         }, 500);
     }
 
     @OnClick(R.id.ivSearch)
     public void onSearchClick(){
-        Toast.makeText(this, "search", Toast.LENGTH_LONG).show();
+        Intent it = new Intent(this, SearchActivity.class);
+        Bundle bundle = new Bundle();
+        startActivity(it);            // startActivityForResult(it,REQ
     }
 
-    @Override
-    public void onRefresh() {
-        if (!isRefresh) {
-            isRefresh = true;
-            mSwipeRefreshWidget.setRefreshing(true);
-            if(loadMore){
-                recipeListPresenter.loadMoreRecipes();
-            }
-            else {
-                recipeListPresenter.updateRefreshRecipes();
-            }
-        }
-    }
+
 
     @Override
     public void onCookListUpdateRefreshSuccess(ArrayList<RecipeEntity> list) {
@@ -184,8 +169,8 @@ public class MainActivity extends BaseDrawerActivity
     }
 
     private void resetReflashStatus(){
-        loadMore = false;
-        isRefresh = false;
         mSwipeRefreshWidget.setRefreshing(false);
+        mSwipeRefreshWidget.setLoading(false);
     }
+
 }
